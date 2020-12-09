@@ -3,6 +3,8 @@
 # %%
 import tensorflow as tf
 from tensorflow import keras
+import matplotlib.pyplot as plt
+import numpy as np
 
 (x_train, y_train), (x_val, y_val) = keras.datasets.fashion_mnist.load_data()
 
@@ -73,5 +75,57 @@ print(correct/len(y_val)*100)
 
 # %%
 model.save('fashion_mnist(10.4).h5')
+
+
+# %%
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.ylim((0, 1)) # Uncomment this when showing you model for pay raise
+plt.legend(['train', 'test'], loc='upper left');
+
+
+# %%
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.ylim((1.5, 2))
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+
+
+# %%
+def plot_image(i, predictions_array, true_label, img):
+  predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
+  plt.grid(False)
+  plt.xticks([])
+  plt.yticks([])
+  
+  plt.imshow(img, cmap=plt.cm.binary)
+
+  predicted_label = np.argmax(predictions_array)
+  if predicted_label == true_label:
+    color = 'green'
+  else:
+    color = 'red'
+  
+  plt.xlabel("Predicted: {} {:2.0f}% (True: {})".format(class_names[predicted_label],
+                                100*np.max(predictions_array),
+                                class_names[true_label]),
+                                color=color)
+
+
+# %%
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 
+               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+
+# %%
+i = 200
+plot_image(i, predictions, y_val, x_val)
 
 
